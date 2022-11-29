@@ -3,7 +3,8 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as blueprints from '@aws-quickstart/eks-blueprints';
 
-import { TeamPlatform, TeamApplication } from '../teams'; // HERE WE IMPORT TEAMS
+import { TeamPlatform, TeamApplication } from '../teams'; 
+import { KyvernoAddOn } from './kyverno_addon'; // WE IMPORT THE ADDON HERE
 
 export default class ClusterConstruct extends Construct {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -15,8 +16,11 @@ export default class ClusterConstruct extends Construct {
     const blueprint = blueprints.EksBlueprint.builder()
     .account(account)
     .region(region)
-    .addOns(new blueprints.ClusterAutoScalerAddOn) // Cluster Autoscaler addon goes here
-    .teams(new TeamPlatform(account), new TeamApplication('burnham',account)) // HERE WE ONBOARD THE TEAMS
+    .addOns(
+      new blueprints.ClusterAutoScalerAddOn,
+      new KyvernoAddOn, // HERE WE ONBOARD THE ADDON
+      )
+    .teams(new TeamPlatform(account), new TeamApplication('burnham',account)) 
     .build(scope, id+'-stack');
   }
 }
