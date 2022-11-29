@@ -15,7 +15,7 @@ export default class ClusterConstruct extends Construct {
     const blueprint = blueprints.EksBlueprint.builder()
     .account(account)
     .region(region)
-    .addOns()
+    .addOns(new blueprints.ClusterAutoScalerAddOn) // Cluster Autoscaler addon goes here
     .teams(new TeamPlatform(account), new TeamApplication('burnham',account)) // HERE WE ONBOARD THE TEAMS
     .build(scope, id+'-stack');
   }
